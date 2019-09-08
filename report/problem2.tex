@@ -1,0 +1,36 @@
+\section*{Problem 2 - Straight-line path following in the horizontal plane}
+Answer Problem 2 in this file. 
+\subsection*{Problem 2.1}
+Answer problem 2.1 here. The Greek letters for sideslip, heading and course are $\beta$, $\psi$ and $\chi$, respectively. Equation (10) in the assignment is:
+\begin{equation}
+\label{y_kinematics}
+	\begin{aligned}
+		\dot{x} &= u \cos (\psi) -v \sin (\psi) \\
+		\dot{y} &= u \sin (\psi) + v \cos (\psi)
+	\end{aligned}
+\end{equation} 
+You can refer to equations in the report by using the label and the "eqref" command. Example: equation \eqref{y_kinematics} shows the north and east velocities. 
+
+\subsection*{Problem 2.2}
+Answer Problem 2.2 here...
+
+\subsection*{Problem 2.3}
+Transfer functions can be written as
+\begin{equation}
+	H(s) = \frac{a_n s^n + ... + a_1 s + a_0}{b_m s^m + ... + b_1 s + b_0}
+\end{equation}
+
+The Nomoto model can be written as
+\begin{equation}
+\label{eq:nomoto}
+	\begin{aligned}
+		T \dot{r} + r &= K \delta + b \\
+		\dot{\psi} &= r
+	\end{aligned}
+\end{equation}
+
+\subsection*{Problem 2.4}
+Answer Problem 2.4 here.  References can be placed in the "bibliography.bib" and referred to as \cite{Fossen2011} and \cite{Fjellstad1994857}. The PID-controller is
+\begin{equation}
+	\delta = -k_p y - k_d \dot{y} - k_i \int y
+\end{equation}

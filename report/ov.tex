@@ -1,0 +1,37 @@
+%% This is the main file and you use this file to organize your assignment.
+
+\documentclass[a4paper]{article}	  
+\usepackage[margin=3cm]{geometry} 	   % Choose your margin here. 
+\usepackage{amsmath}
+\usepackage{parskip}
+\usepackage{graphicx}
+\usepackage{caption}
+\usepackage{subcaption}
+
+\newcommand{\figref}[1]{\figurename~\ref{#1}}
+
+\let\endtitlepage\relax						% Begin the text immidiately after the title page. Optional
+\setlength{\parindent}{0cm}				% Start paragraph without indent. Optional
+
+\begin{document}
+
+\begin{titlepage}
+\begin{center}
+\Large TTK4190 Guidance and Control of Vehicles \\
+\vspace{10pt}
+\Large \LaTeX{} Template Assignment 1 \\
+\vspace{10pt}
+\large Written Fall 2019 By Name
+\end{center}
+\end{titlepage}
+
+\section*{Info}
+This is only a short template for the assignments and it is definitely not necessary to use this template if you are familiar with \LaTeX{} beforehand. The best way to learn \LaTeX{} is to write some stuff yourself and Google problems you run into. Therefore, we will not answer \LaTeX{} related questions outside of the assignment guidance, but you are of course welcome to ask questions then.
+
+\input{problem1}	% Use "\include" instead of "\input" if you want the section to start on a new page. "problem1" is a tex file included at this location in the document. It is possible to answer the whole assignment in the main file (paste everything from "problem1.tex" and "problem2.tex" here), but that restricts the readability. Therefore, one file is created for each problem.
+\include{problem2}
+ 
+\bibliographystyle{IEEEtran}
+\bibliography{bibliography.bib}
+
+\end{document}
