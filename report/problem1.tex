@@ -63,7 +63,7 @@ So,
 \end{aligned}\end{equation}
 The linearized system has the form
 \begin{equation}\begin{aligned}
-\dot{\hat{\mathbf{x}}} = \mathbf{A}\hat{\mathbf{x}} = \mathbf{B}\hat{\boldsymbol{\tau}}
+\dot{\hat{\mathbf{x}}} = \mathbf{A}\hat{\mathbf{x}} + \mathbf{B}\hat{\boldsymbol{\tau}}
 \end{aligned}\end{equation}
 where $\mathbf{A} = $ and $\mathbf{B}$ are the Jacobians $\frac{\partial \mathbf{f}}{\partial \mathbf{x}}$, and $\frac{\partial \mathbf{f}}{\partial \boldsymbol{\tau}}$ respectively, evaluated at the equilibrium $\mathbf{x}=\mathbf{x_0}$. That is,
 \begin{align}
@@ -94,6 +94,56 @@ where $\mathbf{0}_3$ denotes a 3-by-3 zero-valued matrix. \eqref{eq:A_matrix} fo
 
 
 \subsection{}
+We now introduce the control law
+\begin{equation}
+  \label{eq:tau}
+  \mathbf{\tau} = -\mathbf{K}_d \boldsymbol{\omega} - k_p \boldsymbol{\epsilon},
+\end{equation}
+where $\mathbf{K}_d = k_d \mathbf{I}_3 = 40 \mathbf{I}_3$ and $k_p = 2$. Since this input is only dependent on our state vector $x$, we can find an expression for the closed loop system with a single system matrix. This system becomes
+\begin{equation}\begin{aligned}
+\dot{\hat{ \mathbf{x}}}
+&= \mathbf{A}\hat{\mathbf{x}} + \mathbf{B}\hat{\boldsymbol{\tau}} \\
+&= \mathbf{A}\hat{\mathbf{x}} + \mathbf{B}(-\mathbf{K}_d \boldsymbol{\omega} - k_p \boldsymbol{\epsilon}) \\
+&= \mathbf{A}\hat{\mathbf{x}} + \mathbf{B}(
+-\begin{bmatrix}
+\mathbf{0}_3 & \mathbf{K}_d \\
+\end{bmatrix} \hat{\mathbf{x}}
+-\begin{bmatrix}
+k_p \mathbf{I}_3 & \mathbf{0}_3 \\
+\end{bmatrix}\hat{\mathbf{x}}
+) \\
+&= (\mathbf{A}\hat{\mathbf{x}} - \mathbf{B}
+\begin{bmatrix}
+k_p \mathbf{I}_3 & \mathbf{K}_d \\
+\end{bmatrix}
+) \hat{\mathbf{x}} \\
+&= \left(
+\begin{bmatrix}
+\mathbf{0}_3 & \frac{1}{2}\mathbf{I}_3 \\
+\mathbf{0}_3 & \mathbf{0}_3 \\
+\end{bmatrix}
+-
+\begin{bmatrix}
+\mathbf{0}_3\\
+\frac{1}{mr^2}\mathbf{I}_3\\
+\end{bmatrix}
+\begin{bmatrix}
+k_p\mathbf{I}_3 & \mathbf{K}_d \\
+\end{bmatrix}
+\right) \hat{\mathbf{x}} \\
+&=
+\begin{bmatrix}
+\mathbf{0}_3 & \frac{1}{2}\mathbf{I}_3 \\
+-\frac{k_p}{mr^2}\mathbf{I}_3& -\frac{1}{mr^2}\mathbf{K}_d \\
+\end{bmatrix}
+\hat{\mathbf{x}}.
+\end{aligned}\end{equation}
+The matlab command below is used to find the eigenvalues of this matrix, which will coincide with the poles of the closed loop transfer function.
+\lstset{language=Matlab, basicstyle=\small}
+\begin{lstlisting}[frame=single]
+eigs([zeros(3,3), 1/2*eye(3); -k_p/(m*r^2)*eye(3), -k_d/(m*r^2)*eye(3)])
+\end{lstlisting}
+These eigenvalues are found to be $\lambda_{1,2} = -0.0278 \pm 0.0248j$, i.e. complex conjugated in the left half plane. This means that the system is stable. \textbf{TODO: Do we want complex conjugated or real?}
 
 \subsection{}
 Equation (2) from the assignment can be written as:
