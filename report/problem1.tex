@@ -170,15 +170,64 @@ With the control law from \eqref{eq:control_law} the system behaves as shown in 
 \end{figure}
 
 \subsection{}
-The quaternion error can be written as
+To make a control law based on deviation from a reference, we define the quaternion error
  \begin{equation}
 	 \tilde{\mathbf{q}} := \left[
 	 \begin{array}{c}
 		 \tilde{\eta} \\
 		 \tilde{\epsilon}
 	 \end{array}
-	 \right] = \bar{\mathbf{q}}_d \otimes \mathbf{q}
+	 \right] = \bar{\mathbf{q}}_d \otimes \mathbf{q},
  \end{equation}
+where $\mathbf{q}_d$ is the reference (and the bar denotes the quaternion conjugate). Using the definition of the quaternion product from the assignment text, we obtain
+\begin{equation}\begin{aligned}
+\tilde{\mathbf{q}} =
+\begin{bmatrix}
+\eta_d \eta + \boldsymbol{\epsilon}^\top_d \boldsymbol{\epsilon}\\
+\eta_d \boldsymbol{\epsilon} - \eta \boldsymbol{\epsilon}_d - \mathbf{S}(\boldsymbol{\epsilon}_d)\boldsymbol{\epsilon}\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\eta_d \eta + \epsilon_{d1} \epsilon_1 + \epsilon_{d2}\epsilon_2 + \epsilon_{d3}\epsilon_3\\
+\eta_d \epsilon_1 - \eta \epsilon_{d1} - \epsilon_{d2} \epsilon_3 + \epsilon_{d3}\epsilon_2 \\
+\eta_d \epsilon_2 - \eta \epsilon_{d2} - \epsilon_{d3} \epsilon_1 + \epsilon_{d1}\epsilon_3 \\
+\eta_d \epsilon_3 - \eta \epsilon_{d3} - \epsilon_{d1} \epsilon_2 + \epsilon_{d2}\epsilon_1 \\
+\end{bmatrix}
+\end{aligned}\end{equation}
+where we have used
+\begin{equation}\begin{aligned}
+\mathbf{S}(\epsilon_d)\epsilon =
+\begin{bmatrix}
+0 & -\epsilon_{d3} & \epsilon_{d2}\\
+\epsilon_{d3} & 0 & -\epsilon_{d1} \\
+-\epsilon_{d2} & \epsilon_{d1} & 0 \\
+\end{bmatrix}
+\begin{bmatrix}
+\epsilon_1\\
+\epsilon_2\\
+\epsilon_3\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+\epsilon_{d2} \epsilon_3 - \epsilon_{d3}\epsilon_2\\
+\epsilon_{d3} \epsilon_1 - \epsilon_{d1}\epsilon_3\\
+\epsilon_{d1} \epsilon_2 - \epsilon_{d2}\epsilon_1\\
+\end{bmatrix}.
+\end{aligned}\end{equation}
+After convergence, i.e. when $\mathbf{q} = \mathbf{q}_d$, this error becomes
+\begin{equation}\begin{aligned}
+\tilde{\mathbf{q}} =
+\begin{bmatrix}
+\eta_d^2 + \boldsymbol{\epsilon}^\top_d \boldsymbol{\epsilon}_d\\
+\eta_d \boldsymbol{\epsilon}_d - \eta_d \boldsymbol{\epsilon}_d - \mathbf{S}(\boldsymbol{\epsilon}_d)\boldsymbol{\epsilon}_d\\
+\end{bmatrix}
+=
+\begin{bmatrix}
+1\\
+\mathbf{0}\\
+\end{bmatrix}
+\end{aligned}\end{equation}
+since $\eta^2 = 1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}$ and $\boldsymbol{\mathbf{S}}(\boldsymbol{\epsilon})\boldsymbol{\epsilon} = \mathbf{0}$.
 
 \subsection{Problem 1.5}
 In problems with simulations, you need to include figures in the report:
