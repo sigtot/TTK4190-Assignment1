@@ -17,11 +17,11 @@
 %                            w = angular velocity vector (3x1)
 %                            q = unit quaternion vector (4x1)
 %
-% Author:                   2018-08-15 Thor I. Fossen and Håkon H. Helgesen
+% Author:                   2018-08-15 Thor I. Fossen and Hï¿½kon H. Helgesen
 
 %% USER INPUTS
 h = 0.1;                     % sample time (s)
-N  = 400;                    % number of samples. Should be adjusted
+N  = 1800;                    % number of samples. Should be adjusted
 
 % model parameters
 m = 180;
@@ -43,10 +43,14 @@ w = [0 0 0]';                 % initial angular rates
 
 table = zeros(N+1,14);        % memory allocation
 
+k_d = 40;
+k_p = 2;
+K_d = k_d * eye(3);
+
 %% FOR-END LOOP
 for i = 1:N+1,
    t = (i-1)*h;                  % time
-   tau = [0.5 1 -1]';            % control law
+   tau = -K_d*w - k_p*q(2:4);            % control law
 
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
@@ -72,7 +76,7 @@ w       = rad2deg*table(:,9:11);
 tau     = table(:,12:14);
 
 
-figure (1); clf;
+fig1 = figure (1); clf;
 hold on;
 plot(t, phi, 'b');
 plot(t, theta, 'r');
@@ -83,8 +87,15 @@ legend('\phi', '\theta', '\psi');
 title('Euler angles');
 xlabel('time [s]'); 
 ylabel('angle [deg]');
+print('testfig.pdf','-dpdf','-fillpage')
 
-figure (2); clf;
+set(fig1, 'Units', 'Inches');
+pos1 = get(fig1, 'Position');
+set(fig1, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
+print(fig1, '1_3_euler_angles', '-dpdf', '-r0');
+
+
+fig2 = figure (2); clf;
 hold on;
 plot(t, w(:,1), 'b');
 plot(t, w(:,2), 'r');
@@ -96,7 +107,12 @@ title('Angular velocities');
 xlabel('time [s]'); 
 ylabel('angular rate [deg/s]');
 
-figure (3); clf;
+set(fig2, 'Units', 'Inches');
+pos1 = get(fig2, 'Position');
+set(fig2, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
+print(fig2, '1_3_angular_velocities', '-dpdf', '-r0');
+
+fig3 = figure (3); clf;
 hold on;
 plot(t, tau(:,1), 'b');
 plot(t, tau(:,2), 'r');
@@ -107,3 +123,8 @@ legend('x', 'y', 'z');
 title('Control input');
 xlabel('time [s]'); 
 ylabel('input [Nm]');
+
+set(fig3, 'Units', 'Inches');
+pos1 = get(fig3, 'Position');
+set(fig3, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
+print(fig3, '1_3_control_input', '-dpdf', '-r0');

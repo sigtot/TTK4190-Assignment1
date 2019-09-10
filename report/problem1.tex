@@ -96,7 +96,7 @@ where $\mathbf{0}_3$ denotes a 3-by-3 zero-valued matrix. \eqref{eq:A_matrix} fo
 \subsection{}
 We now introduce the control law
 \begin{equation}
-  \label{eq:tau}
+  \label{eq:control_law}
   \mathbf{\tau} = -\mathbf{K}_d \boldsymbol{\omega} - k_p \boldsymbol{\epsilon},
 \end{equation}
 where $\mathbf{K}_d = k_d \mathbf{I}_3 = 40 \mathbf{I}_3$ and $k_p = 2$. Since this input is only dependent on our state vector $x$, we can find an expression for the closed loop system with a single system matrix. This system becomes
@@ -146,11 +146,28 @@ eigs([zeros(3,3), 1/2*eye(3); -k_p/(m*r^2)*eye(3), -k_d/(m*r^2)*eye(3)])
 These eigenvalues are found to be $\lambda_{1,2} = -0.0278 \pm 0.0248j$, i.e. complex conjugated in the left half plane. This means that the system is stable. \textbf{TODO: Do we want complex conjugated or real?}
 
 \subsection{}
-Equation (2) from the assignment can be written as:
-\begin{equation}
-  \label{eq:tau}
-  \mathbf{\tau} = -\mathbf{K}_d \boldsymbol{\omega} - k_p \boldsymbol{\epsilon}
-\end{equation}
+With the control law from \eqref{eq:control_law} the system behaves as shown in figure \ref{fig:zero_control_law}. This control law drives the euler angles to zero. To drive them to an arbitrarily chosen reference $\boldsymbol{\epsilon}$, we would instead have to define the control law using the reference error $\tilde{\boldsymbol{\epsilon}}$, as is done in equation (3).
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{1_3_euler_angles}
+		\caption{Euler angles.}
+		\label{fig:2a}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{1_3_angular_velocities}
+		\caption{Angular velocities.}
+		\label{fig:2b}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{1_3_control_input}
+		\caption{Control input.}
+		\label{fig:2c}
+	\end{subfigure}
+	\caption{Simulation results with control law \eqref{eq:control_law}}\label{fig:zero_control_law}
+\end{figure}
 
 \subsection{}
 The quaternion error can be written as
