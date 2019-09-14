@@ -51,18 +51,14 @@ We have:
 	= U \sin(\chi)
 \end{align*}
 
-Answer problem 2.1 here. The Greek letters for sideslip, heading and course are $\beta$, $\psi$ and $\chi$, respectively. Equation (10) in the assignment is:
-\begin{equation}
-\label{y_kinematics}
-	\begin{aligned}
-		\dot{x} &= u \cos (\psi) -v \sin (\psi) \\
-		\dot{y} &= u \sin (\psi) + v \cos (\psi)
-	\end{aligned}
-\end{equation}
-You can refer to equations in the report by using the label and the "eqref" command. Example: equation \eqref{y_kinematics} shows the north and east velocities.
-
 \subsection{}
-Answer Problem 2.2 here...
+\begin{align}
+	\dot{x} &= U \cos (\psi + \beta) \\
+	\dot{y} &= U \sin (\psi + \beta) 
+\end{align}
+With $\beta$ small (and a disturbance) and $\psi$ also small. When $\psi$ is small, $\cos(\psi) \approx 0$ and $\sin(\psi) \approx \psi$. This can be seen from Taylor expansion of the sine and cosine functions for small values. 
+
+As the vessel is following a straight line in the horizontal plane, and the assumtions above hold, it is clear that the only part of the cross-track error, $e(t) = -[x(t) - x_k]\sin(\alpha_k) + [y(t) - y_k]\cos(\alpha_k)$, which will affect it is $y$, such that we can give $e(t) = y$. 
 
 \subsection{}
 Transfer functions can be written as
