@@ -1,6 +1,56 @@
 \section{Straight-line path following in the horizontal plane}
-Answer Problem 2 in this file.
 \subsection{}
+From (2.25) we have: 
+\begin{equation}
+	\dot{\mathbf{p}}^b_{nb} = \mathbf{R}(\mathbf{\Theta_{nb}}) \mathbf{v}^b_{nb}
+\end{equation}
+
+Then: 
+\begin{align*}
+	\dot{x} &= u \cos(\psi) \cos (\theta) + v [\cos (\psi) \sin( \theta) \sin (\phi) - \sin (\psi) \cos (\theta)] \\
+	&+ w [\sin (\psi) \sin (\phi) + \cos (\psi) \cos (\phi) \sin(\theta)] \\
+	&= u \cos(\psi) * 1 + v [\cos (\psi) * 0 * 0 - \sin (\psi) * 1] + w [\sin (\psi) * 0 + \cos (\psi) * 1 * 0] \\
+	&= u \cos(\psi) - v \sin(\psi) \\
+	\dot{y} &= u \sin (\psi) \cos (\theta) 
+	+ v [\cos (\psi) \cos (\phi) + \sin (\phi) \sin (\theta) \sin (\psi)] \\
+	&+ w [\sin (\theta) \sin (\psi) \cos (\phi) + \cos(\psi) \sin(\phi)] \\ 
+	&= u \sin (\psi) * 1
+	+ v [\cos (\psi) * 1 + \sin (\phi) * 0 * 0] 
+	+ w [0 * \sin (\psi) * 1 + \cos(\psi) * 0] \\ 
+	&= u \sin (\psi) + v \cos (\psi) 
+\end{align*}
+Using: 
+\begin{align}
+	\sin (\arctan (x)) &= \frac{x}{1 + x^2} \\
+	\cos (\arctan (x)) &= \frac{1}{1 + x^2} \\ 
+	U &= \sqrt{u^2 + v^2} \\ 
+	\beta &= \arctan(\frac{v}{u}) \\
+	\chi &= \psi + \beta 
+\end{align}
+
+We have: 
+\begin{align*}
+	\dot{x} &= u \cos(\psi) - v \sin(\psi) 
+	= \sqrt{u^2 + v^2} [\cos (\psi) \frac{u}{\sqrt{u^2 + v^2}} 
+	- \sin (\psi) \frac{v}{\sqrt{u^2 + v^2}}] \\
+	&= U [\cos (\psi) \frac{1}{\sqrt{1 + \frac{v^2}{u^2}}} 
+	- \sin (\psi) \frac{\frac{v}{u}}{\sqrt{1 + \frac{v^2}{u^2}}}] \\ 
+	&= U [\cos (\psi) \cos(\arctan(\frac{v}{u})) 
+	- \sin (\psi) \sin(\arctan(\frac{v}{u}))] 
+	= U [\cos (\psi) \cos(\beta)) - \sin (\psi) \sin(\beta))] \\ 
+	&= U \cos(\psi + \beta) = U \cos(\chi) \\
+	\dot{y} &= u \sin (\psi) + v \cos (\psi) 
+	= \sqrt{u^2 + v^2} [\sin (\psi) \frac{u}{\sqrt{u^2 + v^2}}
+	+ \cos (\psi) \frac{v}{\sqrt{u^2 + v^2}}] \\
+	&= U [\sin (\psi) \frac{1}{\sqrt{1 + \frac{v^2}{u^2}}} 
+	+ \cos (\psi) \frac{\frac{v}{u}}{\sqrt{1 + \frac{v^2}{u^2}}}] 
+	= U [\sin (\psi) \cos (\arctan(\frac{v}{u}))
+	+ \cos (\psi) \sin (\arctan(\frac{v}{u}))] \\
+	&= U \sin(\psi + \arctan (\frac{v}{u})) 
+	= U \sin(\psi + \beta) 
+	= U \sin(\chi)
+\end{align*}
+
 Answer problem 2.1 here. The Greek letters for sideslip, heading and course are $\beta$, $\psi$ and $\chi$, respectively. Equation (10) in the assignment is:
 \begin{equation}
 \label{y_kinematics}
