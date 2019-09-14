@@ -56,7 +56,7 @@ We have:
 	\dot{x} &= U \cos (\psi + \beta) \\
 	\dot{y} &= U \sin (\psi + \beta) 
 \end{align}
-With $\beta$ small (and a disturbance) and $\psi$ also small. When $\psi$ is small, $\cos(\psi) \approx 0$ and $\sin(\psi) \approx \psi$. This can be seen from Taylor expansion of the sine and cosine functions for small values. 
+With $\beta$ small (and a disturbance) and $\psi$ also small. Then (12) can be seen from Taylor expansion of the sine and cosine functions for small values, with $\dot{x} = U$ and $\dot{y} = U \psi$. 
 
 As the vessel is following a straight line in the horizontal plane, and the assumtions above hold, it is clear that the only part of the cross-track error, $e(t) = -[x(t) - x_k]\sin(\alpha_k) + [y(t) - y_k]\cos(\alpha_k)$, which will affect it is $y$, such that we can give $e(t) = y$. 
 
@@ -74,6 +74,15 @@ The Nomoto model can be written as
 		\dot{\psi} &= r
 	\end{aligned}
 \end{equation}
+
+Then we can find the transfer functions of \eqref{eq:nomoto} as: 
+\begin{align*}
+	T s^2 \psi(s) + s \psi(s) &= K \delta(s) + b(s) \\
+	s(T s + 1) \frac{s}{U} y(s) &= K \delta(s) + b(s) \\
+	y(s) &= \frac{K U}{s^2 (T s + 1)} \delta(s) + \frac{U}{s^2 (T s + 1)} b(s) \\ 
+	h_1(s) &= \frac{K U}{s^2 (T s + 1)} \\
+	h_2(s) &= \frac{U}{s^2 (T s + 1)}
+\end{align*}
 
 \subsection{}
 Answer Problem 2.4 here.  References can be placed in the "bibliography.bib" and referred to as \cite{Fossen2011} and \cite{Fjellstad1994857}. The PID-controller is
