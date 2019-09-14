@@ -2,5 +2,5 @@
 *.bbl
 *.blg
 *.log
-*.pdf
+ov.pdf
 
