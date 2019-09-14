@@ -1,0 +1,3 @@
+[submodule "matlab/MSS"]
+	path = matlab/MSS
+	url = https://github.com/cybergalactic/MSS.git

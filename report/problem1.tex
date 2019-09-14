@@ -229,43 +229,39 @@ After convergence, i.e. when $\mathbf{q} = \mathbf{q}_d$, this error becomes
 \end{aligned}\end{equation}
 since $\eta^2 = 1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}$ and $\boldsymbol{\mathbf{S}}(\boldsymbol{\epsilon})\boldsymbol{\epsilon} = \mathbf{0}$.
 
-\subsection{Problem 1.5}
-In problems with simulations, you need to include figures in the report:
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\textwidth]{fig1} % Filename is "fig1.png" and must be located in the same folder as this file. If you have a folder containing all the figures you can use "Figures/fig 1" as long as the "Figures" folder is placed in the same folder as this file.
-	\caption{Figure of something useful.}
-	\label{fig:fig1}
-\end{figure}
-
-You can now refer to this figure as \figref{fig:fig1}. You can also insert figures side-by-side as in Figure \ref{fig:2}. %Notice that \figref includes the word Figure before the reference. If you use "\ref", you need to write the word Figure yourself.
-\begin{figure}[ht]
+\subsection{}
+We now try to simulate with the control law based on a reference $\mathbf{q}_d$, i.e. with the control law
+\begin{equation}\begin{aligned}
+\label{eq:control_law_error}
+\boldsymbol{\tau} = - \mathbf{K}_d -k_p \tilde{\boldsymbol{\epsilon}}.
+\end{aligned}\end{equation}
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2a}
+		\includegraphics[width=\textwidth]{../matlab/1_5_euler_angles}
+		\caption{Euler angles. Reference: dotted, line: state.}
+		\label{fig:5a}
 	\end{subfigure}
 	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
 	%(or a blank line to force the subfigure onto a new line)
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2b}
+		\includegraphics[width=\textwidth]{../matlab/1_5_angular_velocities}
+		\caption{Angular velocities.}
+		\label{fig:5b}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2c}
+		\includegraphics[width=\textwidth]{../matlab/1_5_control_input}
+		\caption{Control input.}
+		\label{fig:5c}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2d}
+		\includegraphics[width=\textwidth]{../matlab/1_5_euler_angle_errors}
+		\caption{Error in euler angles.}
+		\label{fig:5d}
 	\end{subfigure}
-	\caption{Caption for all figures}\label{fig:2}
+	\caption{Simulation results with control law \eqref{eq:control_law_error}}\label{fig:error_control_law}
 \end{figure}
-
+Figure \ref{fig:error_control_law} shows the system simulated with reference angles $\phi(t) = 0$, $\theta(t) = 15\cos(0.1t)$, $\psi(t) = 10\sin(0.05t)$. As we can see, the satelite is not able to respond to the fast frequencies, so we get a large phase shift and a big decrease in amplitude. We recall that when a sinusoidal is differentiated, or passed through a first order system for that matter, the output is scaled proportional to the period, which in this case is quite small, leading to a decreased amplitude.
 
 \subsection{Problem 1.6}
 The control law in this problem can be written as
