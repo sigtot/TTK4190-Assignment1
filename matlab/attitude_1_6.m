@@ -50,24 +50,43 @@ K_d = k_d * eye(3);
 %% SIMULATION LOOP
 for i = 1:N+1
    t = (i-1)*h;   % time
-   q_d = euler2q(0,15*cos(0.1*t)*deg2rad, 10*sin(0.05*t)*deg2rad); % reference
    
-   q_squiggle = quatprod(quatconj(q_d), q);      % reference error
-   tau = -K_d*w - k_p*q_squiggle(2:4); % control law from 1.5
+   % Reference
+   phi_d = 0;
+   theta_d = 15*cos(0.1*t)*deg2rad;
+   psi_d = 10*sin(0.05*t)*deg2rad;
+   phi_d_dot = 0;
+   theta_d_dot = -1.5*sin(0.1*t)*deg2rad;
+   psi_d_dot = 0.5*cos(0.05*t)*deg2rad;
+   T_inv = [1  0          -sin(theta_d)
+            0  cos(phi_d)  cos(theta_d)*sin(phi_d)
+            0 -sin(phi_d) -cos(theta_d)*cos(phi_d)];
+   w_d = T_inv*[phi_d_dot, theta_d_dot, psi_d_dot]';
+   q_d = euler2q(phi_d, theta_d, psi_d);
+   
 
+   % Error
+   q_squiggle = quatprod(quatconj(q_d), q);      % reference error
+   w_squiggle = w - w_d;
+   tau = -K_d*w_squiggle - k_p*q_squiggle(2:4); % control law from 1.6
+        
    [phi,theta,psi] = q2euler(q); % transform q to Euler angles
-   [phi_squiggle,theta_squiggle,psi_squiggle] = q2euler(q_d); % transform q to Euler angles
+   [phi_squiggle,theta_squiggle,psi_squiggle] = q2euler(q_d);
    [J,J1,J2] = quatern(q);       % kinematic transformation matrices
    
+   % Kinematics
    q_dot = J2*w;                        % quaternion kinematics
    w_dot = I_inv*(Smtrx(I*w)*w + tau);  % rigid-body kinetics
    
-   table(i,:) = [t q' phi theta psi w' tau' phi_squiggle theta_squiggle psi_squiggle];  % store data in table
+   % Data storing
+   table(i,:) = [t q' phi theta psi w' tau', phi_squiggle theta_squiggle psi_squiggle];
    
-   q = q + h*q_dot;	             % Euler integration
+   % Euler integration
+   q = q + h*q_dot;
    w = w + h*w_dot;
    
-   q  = q/norm(q);               % unit quaternion normalization
+   % Unit quaternion normalization
+   q  = q/norm(q);
 end
 
 %% PLOT FIGURES
@@ -108,7 +127,7 @@ ylabel('angle [deg]');
 set(fig1, 'Units', 'Inches');
 pos1 = get(fig1, 'Position');
 set(fig1, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
-print(fig1, '1_5_euler_angles', '-dpdf', '-r0');
+print(fig1, '1_6_euler_angles', '-dpdf', '-r0');
 
 
 fig2 = figure (2); clf;
@@ -126,7 +145,7 @@ ylabel('angular rate [deg/s]');
 set(fig2, 'Units', 'Inches');
 pos1 = get(fig2, 'Position');
 set(fig2, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
-print(fig2, '1_5_angular_velocities', '-dpdf', '-r0');
+print(fig2, '1_6_angular_velocities', '-dpdf', '-r0');
 
 fig3 = figure (3); clf;
 hold on;
@@ -143,7 +162,7 @@ ylabel('input [Nm]');
 set(fig3, 'Units', 'Inches');
 pos1 = get(fig3, 'Position');
 set(fig3, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
-print(fig3, '1_5_control_input', '-dpdf', '-r0');
+print(fig3, '1_6_control_input', '-dpdf', '-r0');
 
 fig4 = figure (4); clf;
 hold on;
@@ -162,4 +181,4 @@ ylabel('angle [deg]');
 set(fig4, 'Units', 'Inches');
 pos1 = get(fig4, 'Position');
 set(fig4, 'PaperPositionMode', 'Auto', 'PaperUnits', 'Inches', 'PaperSize', [pos1(3), pos1(4)]);
-print(fig4, '1_5_euler_angle_errors', '-dpdf', '-r0');
+print(fig4, '1_6_euler_angle_errors', '-dpdf', '-r0');
