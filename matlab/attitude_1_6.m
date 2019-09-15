@@ -139,7 +139,7 @@ hold off;
 grid on;
 legend('x', 'y', 'z');
 title('Angular velocities');
-xlabel('time [s]'); 
+xlabel('time [s]');
 ylabel('angular rate [deg/s]');
 
 set(fig2, 'Units', 'Inches');
