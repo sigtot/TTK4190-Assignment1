@@ -84,10 +84,11 @@ Then we can find the transfer functions of \eqref{eq:nomoto} as:
 	h_2(s) &= \frac{U}{s^2 (T s + 1)}
 \end{align*}
 
-The reason we'd like to use the integral term is to remove the bias. The integral can then essentially sum up the bias over time, so that it would be removed. This, however, introduces another integrator into the system, and as we can see above, there are already more integrators there. Therefore, a derivative term is needed to stabilize the system. 
+The reason we'd like to use the integral term is to remove the bias. The integral can then essentially sum up the bias over time, so that it would be removed. This, however, introduces another integrator into the system, and as we can see above, there are already more integrators there. Therefore, a derivative term is needed to stabilize the system.
 
 \subsection{}
-Answer Problem 2.4 here.  References can be placed in the "bibliography.bib" and referred to as \cite{Fossen2011} and \cite{Fjellstad1994857}. The PID-controller is
-\begin{equation}
-	\delta = -k_p y - k_d \dot{y} - k_i \int y
-\end{equation}
+Simulating the system with MATLAB, and tuning the PID gains until a satisfying result is reached (for $k_p = 1e-3$¸ $k_i = 2e-7$ and $k_d = 5.5e-2$). Then, the following figures are generated: 
+
+%git checkout 2fd40fa179df59c5c4c0b59d5a57e1a313987f65 -- matlab/attitude.m
+
+%2fd40fa179df59c5c4c0b59d5a57e1a313987f65
