@@ -84,6 +84,8 @@ Then we can find the transfer functions of \eqref{eq:nomoto} as:
 	h_2(s) &= \frac{U}{s^2 (T s + 1)}
 \end{align*}
 
+The reason we'd like to use the integral term is to remove the bias. The integral can then essentially sum up the bias over time, so that it would be removed. This, however, introduces another integrator into the system, and as we can see above, there are already more integrators there. Therefore, a derivative term is needed to stabilize the system. 
+
 \subsection{}
 Answer Problem 2.4 here.  References can be placed in the "bibliography.bib" and referred to as \cite{Fossen2011} and \cite{Fjellstad1994857}. The PID-controller is
 \begin{equation}
