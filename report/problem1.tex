@@ -229,62 +229,124 @@ After convergence, i.e. when $\mathbf{q} = \mathbf{q}_d$, this error becomes
 \end{aligned}\end{equation}
 since $\eta^2 = 1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}$ and $\boldsymbol{\mathbf{S}}(\boldsymbol{\epsilon})\boldsymbol{\epsilon} = \mathbf{0}$.
 
-\subsection{Problem 1.5}
-In problems with simulations, you need to include figures in the report:
-\begin{figure}[ht]
-	\centering
-	\includegraphics[width=0.7\textwidth]{fig1} % Filename is "fig1.png" and must be located in the same folder as this file. If you have a folder containing all the figures you can use "Figures/fig 1" as long as the "Figures" folder is placed in the same folder as this file.
-	\caption{Figure of something useful.}
-	\label{fig:fig1}
-\end{figure}
-
-You can now refer to this figure as \figref{fig:fig1}. You can also insert figures side-by-side as in Figure \ref{fig:2}. %Notice that \figref includes the word Figure before the reference. If you use "\ref", you need to write the word Figure yourself.
-\begin{figure}[ht]
+\subsection{}
+We now try to simulate with the control law based on a reference $\mathbf{q}_d$, i.e. with the control law
+\begin{equation}\begin{aligned}
+\label{eq:control_law_error}
+\boldsymbol{\tau} = - \mathbf{K}_d -k_p \tilde{\boldsymbol{\epsilon}}.
+\end{aligned}\end{equation}
+\begin{figure}[H]
 	\centering
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2a}
+		\includegraphics[width=\textwidth]{../matlab/1_5_euler_angles}
+		\caption{Euler angles. Reference: dashes, state: line.}
+		\label{fig:5a}
 	\end{subfigure}
 	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
 	%(or a blank line to force the subfigure onto a new line)
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2b}
+		\includegraphics[width=\textwidth]{../matlab/1_5_angular_velocities}
+		\caption{Angular velocities.}
+		\label{fig:5b}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2c}
+		\includegraphics[width=\textwidth]{../matlab/1_5_control_input}
+		\caption{Control input.}
+		\label{fig:5c}
 	\end{subfigure}
 	\begin{subfigure}[b]{0.45\textwidth}
-		\includegraphics[width=\textwidth]{fig1}
-		\caption{caption..}
-		\label{fig:2d}
+		\includegraphics[width=\textwidth]{../matlab/1_5_euler_angle_errors}
+		\caption{Error in euler angles.}
+		\label{fig:5d}
 	\end{subfigure}
-	\caption{Caption for all figures}\label{fig:2}
+	\caption{Simulation results with control law \eqref{eq:control_law_error}}\label{fig:error_control_law}
 \end{figure}
+Figure \ref{fig:error_control_law} shows the system simulated with reference angles $\phi(t) = 0$, $\theta(t) = 15\cos(0.1t)$, $\psi(t) = 10\sin(0.05t)$. As we can see, the satellite is not able to respond to the fast frequencies, so we get a large phase shift and a big decrease in amplitude. We recall that when a sinusoidal signal is differentiated, or passed through a first order system for that matter, the output is scaled proportional to the period, which in this case is quite small, leading to a decreased amplitude.
 
-
-\subsection{Problem 1.6}
-The control law in this problem can be written as
+\subsection{}
+We now introduce an angular velocity reference $\boldsymbol{\omega}_d$ to our control law. We define the error of this as $\tilde{\boldsymbol{ \omega}} =\boldsymbol{\omega} - \boldsymbol{\omega}_d$ and the new control law as
 \begin{equation}
-	\boldsymbol{\tau} = -\mathbf{K}_d \tilde{\boldsymbol{\omega}} - k_p \tilde{\boldsymbol{\epsilon}}
+\label{eq:control_law_ang_error}
+	\boldsymbol{\tau} = -\mathbf{K}_d \tilde{\boldsymbol{\omega}} - k_p \tilde{\boldsymbol{\epsilon}}.
 \end{equation}
-and the desired angular velocity as
+From equation (2.31) in \cite{Fossen2011} we have the following expression for the reference,
 \begin{equation}
-	\boldsymbol{\omega}_d = \mathbf{T}^{-1}_{\Theta_d}(\Theta_d)\dot{\Theta}_d
+	\boldsymbol{\omega}_d = \mathbf{T}^{-1}_{\Theta_d}(\Theta_d)\dot{\Theta}_d,
 \end{equation}
+where $\mathbf{T}^{-1}_{\boldsymbol{\Theta}_d}$, given by equation (2.33), is
+\begin{equation}\begin{aligned}
+\mathbf{T}^{-1}_{\boldsymbol{\Theta}_d} =
+\begin{bmatrix}
+1 & 0 & -\sin(\theta_d) \\
+0 & \cos(\phi_d) & \cos(\theta_d)\sin(\phi_d) \\
+0 & \sin(\phi_d) & \cos(\theta_d)\cos(\phi_d) \\
+\end{bmatrix}.
+\end{aligned}\end{equation}
+We analytically differentiate our reference euler angle signals to obtain
+\begin{equation}\begin{aligned}
+\dot{\boldsymbol{\Theta}_d} =
+\begin{bmatrix}
+\dot \phi_d\\
+\dot \theta_d\\
+\dot \psi_d \\
+\end{bmatrix} =
+\begin{bmatrix}
+0\\
+-1.5 \sin(0.1t)\\
+0.5 \cos(0.05t)\\
+\end{bmatrix}.
+\end{aligned}\end{equation}
+Simulating the system this reference and control law as well as $\mathbf{K}_d = k_d \mathbf{I}_3 = 400 \mathbf{I}_3$ and $k_p = 20$ as before, yields the results shown in figure \ref{fig:ang_error_control_law}.
+\begin{figure}[H]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../matlab/1_6_euler_angles}
+		\caption{Euler angles. Reference: dashes, state: line.}
+		\label{fig:5a}
+	\end{subfigure}
+	~ %add desired spacing between images, e. g. ~, \quad, \qquad, \hfill etc.
+	%(or a blank line to force the subfigure onto a new line)
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../matlab/1_6_angular_velocities}
+		\caption{Angular velocities.}
+		\label{fig:5b}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../matlab/1_6_control_input}
+		\caption{Control input.}
+		\label{fig:5c}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\includegraphics[width=\textwidth]{../matlab/1_6_euler_angle_errors}
+		\caption{Error in euler angles.}
+		\label{fig:5d}
+	\end{subfigure}
+	\caption{Simulation results with control law \eqref{eq:control_law_ang_error}}\label{fig:ang_error_control_law}
+\end{figure}
+This time, the satellite is able to follow the reference very closely in $\theta$. In $\psi$ however, it manages to correctly follow the amplitude, but still has a significant phase shift. The improved performance is very much expected. The previous control law would constantly try to drive the angular velocity to zero. This is clearly unattainable if the satellite is supposed to follow a sineusoidal signal, as its angular velocity would also have to vary with a sine. Since we are able to find the analytical expression for this expected velocity, we can expect great improvements over the earlier control law, and as we have seen, we were able to obtain correct amplitude control.
 
-\subsection{Problem 1.7}
-The Lyapunov function can be written as
+\subsection{}
+We now assume setpoint regulation, i.e. $\boldsymbol{\omega}_d = \mathbf{0}$ and $\boldsymbol{\epsilon}_d$ and $\eta_d$ are constant. The Lyapunov function for this situation can be written as
  \begin{equation}
 	 V = \frac{1}{2} \tilde{\boldsymbol{\omega}}^{\top} \mathbf{I}_{CG}\tilde{\boldsymbol{\omega}} + 2 k_p (1-\tilde{\eta})
  \end{equation}
 and the derivative as
 \begin{equation}
-	\dot{V} = -k_d \boldsymbol{\omega}^{\top} \boldsymbol{\omega}
+	\dot{V} = -k_d \boldsymbol{\omega}^{\top} \boldsymbol{\omega}.
 \end{equation}
-
-% Note that \mathbf can be used for bold letters in math mode (within equations and dollar signs). \boldsymbol can be used to get bold greek letters.
+We know this to be a Lyapunov function because it is positive. Clearly $\tilde{\boldsymbol{\omega}}^\top\mathbf{I}_{CG}\boldsymbol{\tilde \omega}$ is positive, since $\mathbf{I}_{CG} = mr^2\mathbf{I}$ is positive definite. Furthermore, we have for any quaternion that
+\begin{equation}\begin{aligned}
+||\mathbf{q}|| = 1 = \sqrt{\eta^2 + \epsilon_1^2 + \epsilon_2^2 + \epsilon_3^2}
+= \sqrt{\eta^2 + \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}}
+\end{aligned}\end{equation}
+and so
+\begin{equation}\begin{aligned}
+||\mathbf{q}||^2 = \eta^2 \boldsymbol{\epsilon}^\top\boldsymbol{\epsilon} = 1
+\implies \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon} = 1 - \eta^2 \leq 1
+\end{aligned}\end{equation}
+which further implies
+\begin{equation}\begin{aligned}
+\eta^2 = 1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}
+\implies \eta = \sqrt{1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}} \leq 1.
+\end{aligned}\end{equation}
+Now since $\tilde{\mathbf{q}}$ is a unit quaternion (it is the product of two unit quaternions, which we know map (doubly) to SO(3) and it is closed under multiplication \cite{Sola}), we have $\tilde \eta \leq 1$ and hence $2k_p(1-\tilde \eta)$ is also positive and so $V \geq 0$ always.
