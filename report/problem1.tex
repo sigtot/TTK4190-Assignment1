@@ -143,7 +143,7 @@ The matlab command below is used to find the eigenvalues of this matrix, which w
 \begin{lstlisting}[frame=single]
 eigs([zeros(3,3), 1/2*eye(3); -k_p/(m*r^2)*eye(3), -k_d/(m*r^2)*eye(3)])
 \end{lstlisting}
-These eigenvalues are found to be $\lambda_{1,2} = -0.0278 \pm 0.0248j$, i.e. complex conjugated in the left half plane. This means that the system is stable. \textbf{TODO: Do we want complex conjugated or real?}
+These eigenvalues are found to be $\lambda_{1,2} = -0.0278 \pm 0.0248j$, i.e. complex conjugated in the left half plane. This means that the system is stable. We prefer having complex conjugated poles in this case because it results more "aggressive" actuation, albeit with the added side-effect of some oscillations in the response. The reason we want aggressive actuation in this scenario is due to the non-linear nature of the system. Our linearization is only valid in a single point, and gets progressively worse as the state moves away from it. We hence want the controller to control the state back into where the linearization is acceptable as quickly as possible (within reason). In this case, some oscillation is acceptable if it yields faster convergence to the linearization point.
 
 \subsection{}
 With the control law from \eqref{eq:control_law} the system behaves as shown in figure \ref{fig:zero_control_law}. This control law drives the euler angles to zero. To drive them to an arbitrarily chosen reference $\boldsymbol{\epsilon}$, we would instead have to define the control law using the reference error $\tilde{\boldsymbol{\epsilon}}$, as is done in equation (3).
@@ -323,7 +323,7 @@ Simulating the system this reference and control law as well as $\mathbf{K}_d = 
 	\end{subfigure}
 	\caption{Simulation results with control law \eqref{eq:control_law_ang_error}}\label{fig:ang_error_control_law}
 \end{figure}
-This time, the satellite is able to follow the reference very closely in $\theta$. In $\psi$ however, it manages to correctly follow the amplitude, but still has a significant phase shift. The improved performance is very much expected. The previous control law would constantly try to drive the angular velocity to zero. This is clearly unattainable if the satellite is supposed to follow a sineusoidal signal, as its angular velocity would also have to vary with a sine. Since we are able to find the analytical expression for this expected velocity, we can expect great improvements over the earlier control law, and as we have seen, we were able to obtain correct amplitude control.
+This time, the satellite is able to follow the reference very closely in $\theta$. In $\psi$ however, it manages to correctly follow the amplitude, but still has a significant phase shift. Notice also how $\phi$ is more oscillatory than before. This is likely due to the system being non-linear. Nevertheless, we still have an overall improved performance, and this is very much expected. The previous control law would constantly try to drive the angular velocity to zero. This is clearly unattainable if the satellite is supposed to follow a sineusoidal signal, as its angular velocity would also have to vary with a sine. Since we are able to find the analytical expression for this expected velocity, we can expect great improvements over the earlier control law, and as we have seen, we were able to obtain correct amplitude control. The phase shift in $\psi$ is however hard to combat with this control scheme and it is partly due to the fact that controller is unable to predict where the velocity is going to go, as it is constantly changing. Adding another, higher order term, i.e. the accelleration (which we can also find an analytical expression from) to the control law could help remove this phase shift.
 
 \subsection{}
 We now assume setpoint regulation, i.e. $\boldsymbol{\omega}_d = \mathbf{0}$ and $\boldsymbol{\epsilon}_d$ and $\eta_d$ are constant. The Lyapunov function for this situation can be written as
@@ -332,9 +332,10 @@ We now assume setpoint regulation, i.e. $\boldsymbol{\omega}_d = \mathbf{0}$ and
  \end{equation}
 and the derivative as
 \begin{equation}
+        \label{eq:V_dot}
 	\dot{V} = -k_d \boldsymbol{\omega}^{\top} \boldsymbol{\omega}.
 \end{equation}
-We know this to be a Lyapunov function because it is positive. Clearly $\tilde{\boldsymbol{\omega}}^\top\mathbf{I}_{CG}\boldsymbol{\tilde \omega}$ is positive, since $\mathbf{I}_{CG} = mr^2\mathbf{I}$ is positive definite. Furthermore, we have for any quaternion that
+We know this to be positive and radially unbounded. Clearly $\tilde{\boldsymbol{\omega}}^\top\mathbf{I}_{CG}\boldsymbol{\tilde \omega}$ is positive, since $\mathbf{I}_{CG} = mr^2\mathbf{I}$ is positive definite. Furthermore, we have for any quaternion that
 \begin{equation}\begin{aligned}
 ||\mathbf{q}|| = 1 = \sqrt{\eta^2 + \epsilon_1^2 + \epsilon_2^2 + \epsilon_3^2}
 = \sqrt{\eta^2 + \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}}
@@ -349,4 +350,50 @@ which further implies
 \eta^2 = 1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}
 \implies \eta = \sqrt{1 - \boldsymbol{\epsilon}^\top \boldsymbol{\epsilon}} \leq 1.
 \end{aligned}\end{equation}
-Now since $\tilde{\mathbf{q}}$ is a unit quaternion (it is the product of two unit quaternions, which we know map (doubly) to SO(3) and it is closed under multiplication \cite{Sola}), we have $\tilde \eta \leq 1$ and hence $2k_p(1-\tilde \eta)$ is also positive and so $V \geq 0$ always.
+Now since $\tilde{\mathbf{q}}$ is a unit quaternion (it is the product of two unit quaternions, and we know the unit quaternions map (doubly) to SO(3) and this group is closed under multiplication \cite{Sola}), we have $\tilde \eta \leq 1$ and hence $2k_p(1-\tilde \eta)$ is also positive and so $V \geq 0$ always.
+We know $V$ to be radially unbounded because, since the angular velocity terms $\tilde{\omega}_i$ are squared, $|\tilde{\omega}_i| \rightarrow \infty \implies V \rightarrow \infty$. Furthermore, since $\tilde{\boldsymbol{\omega}}$ is the only part of the input to the Lyapunov function (call it $\mathbf{x}=[\tilde{\boldsymbol{\omega}}, \tilde{\eta}]^\top$) that has an unbounded domain, we know that $||\mathbf{x}|| \rightarrow \infty \iff |\tilde{\omega}_i| \rightarrow \infty$ for some $\tilde{\omega}_i$, and so $||\mathbf{x}|| \rightarrow \infty \implies V \rightarrow \infty$, meaning that $V$ is radially unbounded.
+
+We now show that the derivative of $V$ is \ref{eq:V_dot}. Differentiating the first term yields
+\begin{equation}\begin{aligned}
+\label{eq:V_dot_first_term}
+\frac{d}{dt}(\frac{1}{2}\tilde{\boldsymbol{\omega}}^\top \mathbf{I}_{CG}\tilde{\boldsymbol{w}_d}) =
+\frac{d}{dt}(\frac{1}{2}\boldsymbol{\omega}^\top \mathbf{I}_{CG}\boldsymbol{w}_d) =
+\dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG} \boldsymbol{\omega}.
+\end{aligned}\end{equation}
+Likewise, the derivative of the second term becomes
+\begin{equation}\begin{aligned}
+\frac{d}{dt}(2k_p(1-\tilde \eta))
+= \frac{d}{dt}(-2k_p \tilde \eta)
+= -2k_p \dot \eta
+= k_p \tilde{\boldsymbol{\epsilon}}^\top \tilde{\omega}
+\end{aligned}\end{equation}
+where the last expression is obtained from inserting equation (7) from the assignment. Now, inserting the control law from \ref{eq:control_law_ang_error} and using that $\boldsymbol{\omega}_d = \mathbf{0}$, we obtain
+\begin{equation}\begin{aligned}
+\frac{d}{dt}(2k_p(1-\tilde \eta))
+= (-\boldsymbol{\tau} - \mathbf{K}_d \tilde{\boldsymbol{\omega}})^\top \tilde{\boldsymbol{\omega}}
+= (-\boldsymbol{\tau} - \mathbf{K}_d \boldsymbol{\omega})^\top \boldsymbol{\omega}
+= -\boldsymbol{\tau}^\top \boldsymbol{\omega} -k_d \boldsymbol{\omega}^\top \boldsymbol{\omega}.
+\end{aligned}\end{equation}
+Now, inserting the dynamics, i.e. equation (1) in the assignment, we get
+\begin{equation}\begin{aligned}
+\label{eq:V_dot_second_term}
+\frac{d}{dt}(2k_p(1-\tilde \eta))
+&= -(\mathbf{I}_{CG} - \mathbf{S}(\mathbf{I}_{CG}\boldsymbol{\omega})\boldsymbol{\omega})^\top \boldsymbol{\omega} - k_d \boldsymbol{\omega}^\top\boldsymbol{\omega} \\
+&= \dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG} \boldsymbol{\omega}
++ \boldsymbol{\omega}^\top \mathbf{S}(\mathbf{I}_{CG}\boldsymbol{\omega})\boldsymbol{\omega}
+- k_d \boldsymbol{\omega}^\top \boldsymbol{\omega} \\
+&= - \dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG}\boldsymbol{\omega}
++ \boldsymbol{\omega}^\top \mathbf{I}_{CG} \mathbf{S}(\boldsymbol{\omega})\boldsymbol{\omega}
+- k_d\boldsymbol{\omega}\boldsymbol{\omega} \\
+&= - \dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG}\boldsymbol{\omega}
+- k_d\boldsymbol{\omega}^\top\boldsymbol{\omega},
+\end{aligned}\end{equation}
+where we have used $\mathbf{S}(\boldsymbol{\omega})\boldsymbol{\omega} = \mathbf{0}$. Combining \ref{eq:V_dot_first_term} and \ref{eq:V_dot_second_term} we get
+\begin{equation}\begin{aligned}
+\dot{V}
+= \dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG}\boldsymbol{\omega}
+- \dot{\boldsymbol{\omega}}^\top \mathbf{I}_{CG}\boldsymbol{\omega}
+- k_d\boldsymbol{\omega}^\top\boldsymbol{\omega}
+= -k_d \boldsymbol{\omega}^{\top} \boldsymbol{\omega}.
+\end{aligned}\end{equation}
+We see that since $\dot V \geq 0$, it is stable, but we do not know if it is asymptotically stable. We see that when $\dot V = 0$, $\boldsymbol{\omega} = \tilde{\boldsymbol{\omega}} = \mathbf{0}$ which clearly implies $\dot{\boldsymbol{\omega}} = 0$ as well, and so our dynamics become $\mathbf{I}_{CG} \dot{\boldsymbol{\omega}} - \mathbf{S}(\mathbf{I}_{CG}\mathbf{\omega})\boldsymbol{\omega} = \boldsymbol{\tau} = \mathbf{0}$. Thus, from the control law, we get $\tilde{\boldsymbol{\epsilon}} = \mathbf{0}$, and hence have two equilibrium points, found from $\tilde \eta = \pm \sqrt{1-\tilde{\boldsymbol{\epsilon}}^\top \tilde{\boldsymbol{\epsilon}}} = \pm1$. $\tilde \eta = 1$ yields $V = 0$, and hence is an asymptotically stable, $\tilde \eta = -1$ on the other hand yields $V = 4k_p$. Since $V$ is monotonically decreasing, any small perturbation away from this point will send $V$ towards $\tilde \eta = 1$, and $\tilde \eta = -1$ is hence an unstable equilibrium point. So in conclusion, the system is \textit{not} globally asymptotically stable, because it has multiple equilibrium points, some of which are unstable. It is however locally asymptotically stable in $\boldsymbol{\omega} = 0, \tilde \eta = 1$.
